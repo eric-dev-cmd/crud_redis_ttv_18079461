@@ -4,6 +4,7 @@ import com.redis.ttv.entity.Employee;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,10 +15,11 @@ public class EmployeeRepository {
     private HashOperations hashOperations;//crud hash
     private RedisTemplate redisTemplate;
     private ListOperations listOperations;
+    private SetOperations setOperations;
     private final static String EMPLOYEE_KEY = "EMPLOYEE";
 
     public EmployeeRepository(RedisTemplate redisTemplate) {
-
+        this.setOperations = redisTemplate.opsForSet();
         this.hashOperations = redisTemplate.opsForHash();
         this.redisTemplate = redisTemplate;
         this.listOperations = redisTemplate.opsForList();
