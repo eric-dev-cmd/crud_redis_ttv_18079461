@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class EmployeeRepository {
@@ -27,19 +28,27 @@ public class EmployeeRepository {
     }
 
     public void saveEmployee(Employee employee) {
-        listOperations.leftPush("EMPLOYEE", employee);
+        setOperations.add("EMPLOYEE",employee );
+//        listOperations.leftPush("EMPLOYEE", employee);
 //        hashOperations.put("EMPLOYEE", employee.getId(), employee);
     }
 
-    public List<Employee> findAll() {
-        return listOperations.range("EMPLOYEE", 0, listOperations.size("EMPLOYEE"));
+    public Set<Employee> findAll() {
+        return setOperations.members("EMPLOYEE");
+//        return listOperations.range("EMPLOYEE", 0, listOperations.size("EMPLOYEE"));
 //        return hashOperations.values("EMPLOYEE");
     }
 
     public Employee findById(Integer id) {
 
 //        return (Employee) hashOperations.get("EMPLOYEE", id);
-        List<Employee> employees = this.findAll();
+//        List<Employee> employees = this.findAll();
+//        for (Employee employee : employees) {
+//            if(employee.getId() == id)
+//                return employee;
+//        }
+//        return null;
+        Set<Employee> employees = this.findAll();
         for (Employee employee : employees) {
             if(employee.getId() == id)
                 return employee;
@@ -53,6 +62,8 @@ public class EmployeeRepository {
 
     public void delete(Integer id) {
 //        hashOperations.delete("EMPLOYEE", id);
-        listOperations.remove("EMPLOYEE", 1, findById(id));
+//        listOperations.remove("EMPLOYEE", 1, findById(id));
+        Employee employee = findById(id);
+        setOperations.remove("EMPLOYEE", employee);
     }
 }
